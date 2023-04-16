@@ -142,7 +142,7 @@ def main():
                     elif outcome is None:
                         result = "0"
                     else:
-                        raise ValueError("Unknown result {outcome!r}")
+                        raise ValueError(f"Unknown result {outcome!r}")
 
                     score1 = obj1.get(dimension, DEFAULT_ELO)
                     score2 = obj2.get(dimension, DEFAULT_ELO)
