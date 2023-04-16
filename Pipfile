@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 tinydb = "*"
+gptrun = {git = "https://github.com/nilp0inter/gptrun.git"}
 
 [dev-packages]
 
