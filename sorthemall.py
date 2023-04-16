@@ -60,23 +60,23 @@ def update_elo_score(k_factor, score1, score2, outcome):
     on_invalid_response=lambda: None,
     api_frequency_penalty=-2,
     api_presence_penalty=-2,
-    api_max_tokens=10
+    api_max_tokens=100
 )
-def cmp_object_for_task(task, obj1, obj2):
+def cmp_regex_for_data(task, obj1, obj2):
     """
-    Decide which object is best suited for a particular task, works for any
-    combination of language, objects and tasks. Return the best object or
-    `None` if both are equally good or bad at that task. Only returns result,
-    no exceptions, errors or notes.
+    Given a malformed piece of data and two regexes, pick the one that is more
+    likely to match.
 
-    >>> cmp_object_for_task("cortar", "knife", "glove")
-    "knife"
-    >>> cmp_object_for_task("start fire", "mechero", "matches")
-    None
-    >>> cmp_object_for_task("magnify", "ペン", "glasses")
-    "glasses"
-    >>> cmp_object_for_task("писать", "knife", "ペン")
-    "ペン"
+    >>> cmp_regex_for_data("(555) 123 123", "\\d{9}", "[a-z]+")
+    "\\d{9}"
+    >>> cmp_regex_for_data("pedro", "\\d{9}", "[a-z]+")
+    "[a-z]+"
+    >>> cmp_regex_for_data("pepito@ hotmail.es", "[a-z]+@[\\.]+\\.[a-z]+", ".{9}")
+    "[a-z]+@[\\.]+\\.[a-z]+"
+    >>> cmp_regex_for_data("12345678Z", "[a-z]+", "[a-z]+@[\\.]+\\.[a-z]+")
+    None 
+    >>> cmp_regex_for_data("12345678Z", "\\d{7-9}[ABCDEFGWXYZ]", "[a-z]+@[\\.]+\\.[a-z]+")
+    "\\d{7-9}[ABCDEFGWXYZ]"
     """
     ...
 
@@ -130,7 +130,7 @@ def main():
                     oid1 = obj1["object_id"]
                     oid2 = obj2["object_id"]
                     task = dimension
-                    outcome = cmp_object_for_task(task, oid1, oid2)
+                    outcome = cmp_regex_for_data(task, oid1, oid2)
 
                     if k_decay == 0:  # Only print in the first round
                         print(f'{task=} {oid1=} {oid2=} {outcome=}')
